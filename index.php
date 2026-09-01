@@ -62,31 +62,7 @@
                             </tr>
                         </thead>
 
-                        <tbody id="tabelaProjetos_">
-                            <tr>
-                                <td>1</td>
-                                <td>Projeto 1</td>
-                                <td>2 mês(es)</td>
-                                <td>Luan Santana</td>
-                                <td>editar - excluir </td>
-                            </tr>
-
-                            <tr>
-                                <td>2</td>
-                                <td>Projeto 2</td>
-                                <td>3 mês(es)</td>
-                                <td>Roberto Carlos</td>
-                                <td>editar - excluir </td>
-                            </tr>
-
-                            <tr>
-                                <td>3</td>
-                                <td>Projeto 3</td>
-                                <td>1 mês(es)</td>
-                                <td>Fabiana Souza</td>
-                                <td>editar - excluir </td>
-                            </tr>
-
+                        <tbody id="tabelaProjetos">
                         </tbody>
 
                     </table>
