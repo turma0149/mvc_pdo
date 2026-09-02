@@ -20,7 +20,8 @@ function conectarBanco()
         // Cria a conexão com o banco usando PDO
         // PDO significa PHP Data Objects. 
         // É o recurso do PHP para conversar com o banco.
-        $pdo = new PDO("mysql:host=$host;dbname=$banco;", $usuario, $senha);
+        $pdo = new PDO("mysql:host=$host;dbname=$banco;", $usuario, 
+            $senha);
 
         // Faz o PHP mostrar um erro caso algo dê errado no banco
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

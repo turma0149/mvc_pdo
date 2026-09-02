@@ -10,6 +10,21 @@ require __DIR__ . "/ProjetoModel.php";
 // Conecta ao banco
 $pdo = conectarBanco();
 
+// Recebe a ação enviada pelo JavaScript
+$acao = $_REQUEST["acao"] ?? "listar";
 
 
+// Decide qual operação executar
+switch ($acao) {
 
+    // LISTAR
+    case "listar":
+        $projetos = listarProjetos($pdo);
+
+        echo json_encode([
+            "sucesso" => true,
+            "mensagem" => "Projetos listados.",
+            "dados" => $projetos
+        ]);
+        break;
+}
