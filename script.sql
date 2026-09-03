@@ -29,3 +29,5 @@ WHERE id = 1;
 
 -- 1 delete 
 DELETE FROM projetos WHERE id = '3'
+
+

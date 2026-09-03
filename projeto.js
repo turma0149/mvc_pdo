@@ -42,3 +42,96 @@ async function listarProjetos() {
       `;
   });
 }
+
+// SALVAR PROJETO
+// CADASTRAR OU EDITAR CREATE/UPDATE
+async function salvarProjeto(event) {
+  // Impede o recarregamento da página
+  event.preventDefault();
+
+  // Captura os dados do formulário
+  const formulario = document.getElementById("formProjeto");
+  const dados = new FormData(formulario);
+
+  // Envia os dados para o Controller
+  const resposta = await fetch("ProjetoController.php?acao=cadastrar", {
+    method: "POST",
+    body: dados,
+  });
+
+  // Recebe a resposta do PHP
+  const resultado = await resposta.json();
+
+  // Exibe a mensagem
+  alert(resultado.mensagem);
+
+  // Se salvou com sucesso...
+  if (resultado.sucesso == true) {
+    //Reseta o formulário para novo cadastro
+    limparFormProjeto();
+
+    // Atualiza a tabela
+    listarProjetos();
+  }
+}
+
+// NOVO PROJETO (LIMPA O FORMULÁRIO E PREPARA PARA CADASTRO)
+function limparFormProjeto() {
+  document.getElementById("formProjeto").reset();
+  document.getElementById("id").value = "";
+  document.getElementById("acao").value = "cadastrar";
+  document.getElementById("tituloFormulario").textContent = "Novo Projeto";
+}
+
+// EDITAR PROJETO (UPDATE)
+async function editarProjeto(id) {
+  // Busca o projeto pelo ID
+  const resposta = await fetch(`ProjetoController.php?acao=buscar&id=${id}`, {
+    method: "GET",
+  });
+  const resultado = await resposta.json();
+  const projeto = resultado.dados;
+
+  // Preenche o formulário
+  document.getElementById("id").value = projeto.id;
+  document.getElementById("nome").value = projeto.nome;
+  document.getElementById("duracao").value = projeto.duracao;
+  document.getElementById("responsavel").value = projeto.responsavel;
+
+  // Altera a ação para editar
+  document.getElementById("acao").value = "editar";
+
+  // Muda o título
+  document.getElementById("tituloFormulario").textContent = "Editar Projeto";
+
+  // Posiciona o cursor no nome
+  document.getElementById("nome").focus();
+}
+
+// EXCLUIR PROJETO (DELETE)
+async function excluirProjeto(id) {
+  // Confirma a exclusão
+  if (!confirm("Deseja excluir este projeto?")) {
+    return;
+  }
+
+  // Cria os dados da requisição
+  const dados = new FormData();
+  dados.append("acao", "excluir");
+  dados.append("id", id);
+
+  // Envia para o Controller
+  const resposta = await fetch("ProjetoController.php", {
+    method: "POST",
+    body: dados,
+  });
+
+  // Recebe a resposta
+  const resultado = await resposta.json();
+
+  // Exibe a mensagem
+  alert(resultado.mensagem);
+
+  // Atualiza a tabela
+  listarProjetos();
+}

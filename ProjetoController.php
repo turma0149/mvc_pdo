@@ -27,4 +27,57 @@ switch ($acao) {
             "dados" => $projetos
         ]);
         break;
+
+
+    // BUSCAR
+    case "buscar":
+        $projeto = buscarProjeto($pdo, $_GET["id"]);
+
+        echo json_encode([
+            "sucesso" => true,
+            "mensagem" => "Projeto encontrado.",
+            "dados" => $projeto
+        ]);
+        break;
+
+    // CADASTRAR
+    case "cadastrar":
+        cadastrarProjeto($pdo, $_POST);
+
+        echo json_encode([
+            "sucesso" => true,
+            "mensagem" => "Projeto cadastrado com sucesso.",
+            "dados" => null
+        ]);
+        break;
+
+    // EDITAR
+    case "editar":
+        editarProjeto($pdo, $_POST);
+
+        echo json_encode([
+            "sucesso" => true,
+            "mensagem" => "Projeto atualizado com sucesso.",
+            "dados" => null
+        ]);
+        break;
+
+    // EXCLUIR
+    case "excluir":
+        excluirProjeto($pdo, $_POST["id"]);
+
+        echo json_encode([
+            "sucesso" => true,
+            "mensagem" => "Projeto excluído com sucesso.",
+            "dados" => null
+        ]);
+        break;
+
+    // Ação não encontrada
+    default:
+        echo json_encode([
+            "sucesso" => false,
+            "mensagem" => "Ação inválida.",
+            "dados" => null
+        ]);
 }
