@@ -1,0 +1,179 @@
+PROJETO PDO SIMPLES - MVC, LOGIN, SESSÃO, COOKIE E LOGS
+========================================================
+
+ORDEM SUGERIDA DE CONSTRUÇÃO E ESTUDO DO PROJETO
+
+1. Altere o script.sql para atender ao projeto estacionamento/carros
+ 
+2. database.php
+   -> somente conferir se está apontando para o banco correto
+
+3. Crie UsuarioModel.php
+   -> contém as funções relacionadas ao acesso dos usuários no banco.
+   -> buscarUsuarioPorEmail() procura um usuário pelo e-mail.
+   -> cadastrarUsuario() grava um novo usuário.
+   -> usa password_hash() antes de salvar a senha no banco.
+   -> retorna o ID do usuário cadastrado.
+
+4. Crie cadastrarUsuario.php
+   -> mostra o formulário de criação de usuário.
+   -> solicita nome, e-mail e senha.
+   -> usa JavaScript e fetch() para enviar os dados sem recarregar a página.
+   -> envia os dados para UsuarioController.php com a ação cadastrar.
+   -> mostra a mensagem retornada pelo Controller.
+   -> após o cadastro, retorna o usuário para login.php.
+
+5. Crie UsuarioController.php
+   -> recebe as requisições relacionadas ao usuário.
+   -> recebe a ação enviada pelo JavaScript.
+   -> valida se nome, e-mail e senha foram preenchidos.
+   -> verifica se o e-mail já está cadastrado.
+   -> chama cadastrarUsuario() do UsuarioModel.php.
+   -> retorna uma resposta em JSON.
+   -> o cadastro de usuário não exige login, pois é usado para criar uma nova conta.
+
+6. Crie login.php
+   -> mostra o formulário de login.
+   -> verifica se já existe um usuário autenticado na sessão.
+   -> se já estiver logado, envia diretamente para index.php.
+   -> lê o cookie ultimo_email, quando existir.
+   -> permite marcar a opção "Lembrar meu e-mail".
+   -> envia e-mail e senha para autenticar.php.
+   -> possui o link "Criar usuário" para cadastrarUsuario.php.
+
+7. Crie autenticar.php
+   -> inicia a sessão.
+   -> recebe e-mail, senha e a opção de lembrar o e-mail.
+   -> busca o usuário no banco usando UsuarioModel.php.
+   -> usa password_verify() para comparar a senha digitada com o hash salvo.
+   -> criar $_SESSION["usuario_id"].
+   -> criar $_SESSION["usuario_nome"].
+   -> criar $_SESSION["usuario_email"] = $usuario["email"];
+   -> criar ou remover o cookie ultimo_email.
+   -> registrar a ação LOGIN na tabela logs.
+   -> redirecionar o usuário para index.php.
+
+8. Crie proteger.php
+   -> inicia ou recupera a sessão.
+   -> verifica se existe usuario_id na sessão.
+   -> se não existir, redireciona para login.php.
+   -> é usado para proteger páginas que só podem ser acessadas por usuários logados.
+
+9. Crie LogModel.php
+   -> contém a função registrarLog().
+   -> registra usuario_id, projeto_id e ação realizada.
+   -> projeto_id é opcional, permitindo registrar ações como LOGIN e LOGOUT sem projeto.
+   -> também permite relacionar CADASTROU, EDITOU e EXCLUIU ao ID do projeto.
+
+10. Altere index.php
+    -> inclui proteger.php antes do HTML.
+    -> só pode ser acessado por quem estiver logado.
+    -> mostra a mensagem de boas-vindas com o nome armazenado em usuario_nome.
+    -> mostra o botão Sair, que direciona para logout.php.
+    -> contém o formulário de cadastro e edição de projetos.
+    -> contém a tabela onde os projetos são exibidos.
+    -> carrega projeto.js.
+
+11. ProjetoModel.php
+    -> contém somente as operações de acesso à tabela projetos.
+    -> listarProjetos() lista os projetos.
+    -> cadastrarProjeto() cadastra um projeto e retorna o ID criado.
+    -> buscarProjeto() busca um projeto pelo ID.
+    -> editarProjeto() atualiza os dados do projeto.
+    -> excluirProjeto() remove um projeto.
+
+12. ProjetoController.php
+    -> inicia a sessão.
+    -> impede chamadas diretas quando não existe usuario_id na sessão.
+    -> recebe as ações listar, buscar, cadastrar, editar e excluir.
+    -> chama as funções correspondentes do ProjetoModel.php.
+    -> registra CADASTROU, EDITOU e EXCLUIU usando LogModel.php.
+    -> associa o ID do projeto ao log dessas operações.
+    -> retorna as respostas para o JavaScript em formato JSON.
+
+13. projeto.js
+    -> faz a comunicação entre index.php e ProjetoController.php usando fetch().
+    -> carrega a lista de projetos quando a página é aberta.
+    -> envia dados para cadastrar projetos.
+    -> busca os dados de um projeto antes da edição.
+    -> envia a exclusão de um projeto.
+    -> atualiza a tabela depois das operações.
+    -> controla o formulário usado para cadastro e edição.
+
+14. Criar logout.php
+    -> recupera a sessão atual.
+    -> registra a ação LOGOUT antes de destruir a sessão.
+    -> executa session_unset() e session_destroy().
+    -> redireciona novamente para login.php.
+
+
+FLUXO PRINCIPAL DO SISTEMA
+==========================
+
+NOVO USUÁRIO:
+login.php
+   -> cadastrarUsuario.php
+   -> UsuarioController.php
+   -> UsuarioModel.php
+   -> banco de dados
+   -> login.php
+
+LOGIN:
+login.php
+   -> autenticar.php
+   -> UsuarioModel.php
+   -> sessão
+   -> index.php
+
+PROJETOS:
+index.php
+   -> projeto.js
+   -> ProjetoController.php
+   -> ProjetoModel.php
+   -> banco de dados
+
+LOGS:
+autenticar.php / ProjetoController.php / logout.php
+   -> LogModel.php
+   -> tabela logs
+
+LOGOUT:
+index.php
+   -> logout.php
+   -> destrói a sessão
+   -> login.php
+
+
+CONCEITOS IMPORTANTES
+=====================
+
+MVC:
+Neste projeto, a separação é simplificada:
+- View: páginas como index.php, login.php e cadastrarUsuario.php.
+- Controller: ProjetoController.php e UsuarioController.php recebem e decidem as ações.
+- Model: ProjetoModel.php, UsuarioModel.php e LogModel.php acessam o banco de dados.
+
+SESSÃO:
+Os dados ficam no servidor. Neste projeto, a sessão é usada para identificar
+quem está logado. O usuario_id permite proteger as operações e o usuario_nome
+é usado para mostrar a mensagem de boas-vindas.
+
+COOKIE:
+O cookie fica no navegador. Neste projeto, ele deve guardar SOMENTE o último
+e-mail usado no login, quando o usuário escolher essa opção.
+A senha nunca deve ser armazenada no cookie.
+
+SENHA:
+A senha não deve ser salva em texto puro.
+No cadastro, password_hash() gera o hash que é armazenado no banco.
+No login, password_verify() compara a senha digitada com esse hash.
+
+LOG:
+A tabela logs registra as ações realizadas pelo usuário.
+As operações de projeto registram também o projeto_id correspondente.
+Exemplos de ações utilizadas no projeto:
+- LOGIN
+- LOGOUT
+- CADASTROU
+- EDITOU
+- EXCLUIU
