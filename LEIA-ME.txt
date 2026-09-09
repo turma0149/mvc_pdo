@@ -74,7 +74,7 @@ ORDEM SUGERIDA DE CONSTRUÇÃO E ESTUDO DO PROJETO
     -> contém a tabela onde os projetos são exibidos.
     -> carrega projeto.js.
 
-11. ProjetoModel.php
+11. ProjetoModel.php  (proteja: proteger.php)
     -> contém somente as operações de acesso à tabela projetos.
     -> listarProjetos() lista os projetos.
     -> cadastrarProjeto() cadastra um projeto e retorna o ID criado.
@@ -82,7 +82,7 @@ ORDEM SUGERIDA DE CONSTRUÇÃO E ESTUDO DO PROJETO
     -> editarProjeto() atualiza os dados do projeto.
     -> excluirProjeto() remove um projeto.
 
-12. ProjetoController.php
+12. ProjetoController.php (proteja: proteger.php)
     -> inicia a sessão.
     -> impede chamadas diretas quando não existe usuario_id na sessão.
     -> recebe as ações listar, buscar, cadastrar, editar e excluir.
@@ -100,58 +100,14 @@ ORDEM SUGERIDA DE CONSTRUÇÃO E ESTUDO DO PROJETO
     -> atualiza a tabela depois das operações.
     -> controla o formulário usado para cadastro e edição.
 
-14. Criar logout.php
+14. Criar arquivo logout.php
     -> recupera a sessão atual.
     -> registra a ação LOGOUT antes de destruir a sessão.
     -> executa session_unset() e session_destroy().
     -> redireciona novamente para login.php.
 
-
-FLUXO PRINCIPAL DO SISTEMA
-==========================
-
-NOVO USUÁRIO:
-login.php
-   -> cadastrarUsuario.php
-   -> UsuarioController.php
-   -> UsuarioModel.php
-   -> banco de dados
-   -> login.php
-
-LOGIN:
-login.php
-   -> autenticar.php
-   -> UsuarioModel.php
-   -> sessão
-   -> index.php
-
-PROJETOS:
-index.php
-   -> projeto.js
-   -> ProjetoController.php
-   -> ProjetoModel.php
-   -> banco de dados
-
-LOGS:
-autenticar.php / ProjetoController.php / logout.php
-   -> LogModel.php
-   -> tabela logs
-
-LOGOUT:
-index.php
-   -> logout.php
-   -> destrói a sessão
-   -> login.php
-
-
 CONCEITOS IMPORTANTES
 =====================
-
-MVC:
-Neste projeto, a separação é simplificada:
-- View: páginas como index.php, login.php e cadastrarUsuario.php.
-- Controller: ProjetoController.php e UsuarioController.php recebem e decidem as ações.
-- Model: ProjetoModel.php, UsuarioModel.php e LogModel.php acessam o banco de dados.
 
 SESSÃO:
 Os dados ficam no servidor. Neste projeto, a sessão é usada para identificar
