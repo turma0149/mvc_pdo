@@ -1,3 +1,6 @@
+<!-- Se não tiver usuário logado retorna para login -->
+<?php require __DIR__ . "/proteger.php"; ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -11,7 +14,20 @@
 <body>
 
     <main class="container py-5">
-        <h1 class="mb-4"> Cadastro de Projetos</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-1">Cadastro de Projetos</h1>
+
+                <p class="text-muted mb-0">
+                    Bem-vindo(a),
+                    <strong>
+                        <?= htmlspecialchars($_SESSION["usuario_nome"]) ?>
+                    </strong>!
+                </p>
+            </div>
+
+            <a href="logout.php" class="btn btn-outline-danger"> Sair </a>
+        </div>
 
         <!-- FORMULÁRIO -->
         <div class="card mb-4">
@@ -41,7 +57,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary"> Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="novoProjeto()"> Novo </button>
+                    <button type="button" class="btn btn-secondary" onclick="limparFormProjeto()"> Limpar </button>
                 </form>
             </div>
         </div>
