@@ -98,7 +98,28 @@
         </div>
 
     </div>
+    <script>
+        formUsuario.onsubmit = async e => {
+            e.preventDefault();
 
+            const dados = new FormData(formUsuario);
+            dados.append("acao", "cadastrar");
+
+            const resposta = await fetch("UsuarioController.php", {
+                method: "POST",
+                body: dados
+            });
+
+            const json = await resposta.json();
+
+            mensagem.className = `alert ${json.sucesso ? "alert-success" : "alert-danger"}`;
+            mensagem.textContent = json.mensagem;
+
+            if (json.sucesso) {
+                setTimeout(() => location.href = "login.php", 1000);
+            }
+        };
+    </script>
 
 
 
