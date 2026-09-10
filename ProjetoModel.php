@@ -23,6 +23,9 @@ function cadastrarProjeto($pdo, $dados)
         $dados["duracao"],
         $dados["responsavel"]
     ]);
+
+    // Retorna o ID do projeto que acabou de ser cadastrado.
+    return $pdo->lastInsertId();
 }
 
 // BUSCAR
@@ -58,3 +61,4 @@ function excluirProjeto($pdo, $id)
     $stmt = $pdo->prepare("DELETE FROM projetos WHERE id = ?");
     $stmt->execute([$id]);
 }
+
