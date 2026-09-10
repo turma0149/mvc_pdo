@@ -5,7 +5,7 @@ function buscarUsuarioPorEmail($pdo, $email)
 {
     $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ?");
     $stmt->execute([$email]);
-    return $stmt->fetchAll();
+    return $stmt->fetch();
 }
 
 function cadastrarUsuario($pdo, $dados)
